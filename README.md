@@ -1,89 +1,81 @@
-# 💬 Chat distribuído com Python e Tkinter
+# 💬 Chat - Aplicação com Criptografia
 
-## 📘 Descrição
+Um aplicativo de chat em tempo real com criptografia e mensagens privadas
 
-Este projeto consiste em um chat distribuído simples, composto por:
+## ✨ Características
 
-1. Servidor TCP multicliente:
+✅ Criptografia E2E verdadeira (AES-256-GCM)  
+✅ Mensagens privadas 1v1  
+✅ Chat em tempo real (WebSocket)  
+✅ Interface responsiva  
+✅ Sem registro necessário  
 
-- Implementado em Python usando socket e threading.
+## 🔐 Como Funciona
 
-- Escuta conexões em uma porta definida (PORT = 5000).
+A criptografia é baseada em **senha da sala**:
 
-- Cada cliente conectado recebe mensagens de todos os outros em tempo real.
+1. Você digita um nome e uma senha
+2. A senha é usada para derivar uma chave (PBKDF2 com 100k iterações)
+3. Todas as mensagens são criptografadas no seu navegador com AES-256-GCM
+4. O servidor recebe apenas texto criptografado e **não vê o conteúdo**
+5. Outros usuários com a mesma senha conseguem descriptografar
 
-- Mensagens do sistema indicam quando usuários entram no chat.
+**Todos precisam usar a mesma senha para ler as mensagens!**
 
-2. Cliente com interface Tkinter:
+## 🚀 Como Usar
 
-- Conecta ao servidor e permite envio/recepção de mensagens.
+### Entrar no Chat
 
-- Interface gráfica estilizada.
-
-O sistema permite múltiplos clientes conectados simultaneamente, funcionando de forma distribuída.
-
-## ⚙️ Como funciona
-
-1. O servidor roda em uma máquina que aceita conexões TCP.
-
-2. Os clientes se conectam ao IP da máquina servidor e porta configurada.
-
-3. Cada cliente escolhe um nickname ao entrar.
-
-4. O servidor repassa todas as mensagens recebidas a todos os clientes conectados, exceto o remetente.
-
-5. O cliente exibe mensagens recebidas em uma GUI, separando mensagens de sistema das mensagens normais.
-
-Comandos especiais:
-
-/sair → desconecta o cliente do servidor e fecha a interface.
-
-## 📦 Pré-requisitos
-
-- Python 3 (3.8+ recomendado).  
-- Módulos padrão: `socket`, `threading`, `tkinter`, `datetime`, `re`.  
-- Rede local ou VPN para conexão entre máquinas.  
-
-## 🚀 Como Executar
-
-### 🖥️ Servidor
-
-1. Ajuste IP e porta se necessário (opcional):
-
-```python
-HOST = "0.0.0.0"  # Aceita conexões de qualquer interface
-PORT = 5000       # Porta do servidor
 ```
-2. Execute o servidor:
-```bash
-python3 server.py
+1. Nome: Digite seu nome (até 20 caracteres)
+2. Senha: Digite a senha da sala (compartilhe com amigos por outro meio)
+3. Clique: "Entrar no Chat"
 ```
-### 💻 Cliente
 
-1. Ajuste o IP do servidor no arquivo do cliente (client.py):
+### Funcionalidades
 
-```python
-HOST = "IP_DO_SERVIDOR"  # Ex: "192.168.0.100"
-PORT = 5000
-```
-2. Execute o cliente:
-```bash
-python3 client.py
-```
-3. Digite seu nickname quando solicitado.
+| Função | Como fazer |
+|--------|-----------|
+| **Chat Geral** | Mensagens aparecem para todos |
+| **Mensagens Privadas** | Clique em um usuário na barra lateral |
+| **Emojis** | Clique no botão 😀 antes de enviar |
+| **Reações** | Passe mouse + clique "+" em uma mensagem |
+| **Indicador** | Aparece quando alguém está digitando |
 
-4. A interface do chat será exibida automaticamente.
+## 🌐 Testar em Múltiplas Máquinas
 
-## ⌨️ Comandos do Cliente
+### Opção 1: URL de Desenvolvimento
+1. Copie a URL da visualização
+2. Abra em outro navegador/celular/máquina
+3. Use mesmo nome + **mesma senha**
 
-/sair → desconectar do chat.
+## 🛠️ Tecnologia
 
-Enter → enviar mensagem.
+| Parte | Stack |
+|------|-------|
+| **Backend** | Flask + Flask-SocketIO + Eventlet |
+| **Frontend** | HTML/CSS/JavaScript Vanilla |
+| **Criptografia** | PBKDF2 + AES-256-GCM (Web Crypto API) |
+| **Comunicação** | WebSocket (Socket.IO) |
+| **Armazenamento** | Em memória (100 mensagens) |
 
-## 📝 Observações Importantes
+## 📋 Limitações
 
-- O servidor deve estar rodando antes de qualquer cliente se conectar.
+- Mensagens perdidas ao reiniciar servidor
+- Sem persistência em banco de dados
+- Sem autenticação
+- Máximo ~50 usuários simultâneos
 
-- Todos os clientes devem usar o mesmo IP e porta do servidor.
+## 📖 Documentação
 
-- Caso a conexão seja perdida, a interface exibirá status Desconectado.
+- **VISION.md** - Visão do produto e objetivos
+- **DATA_MODEL.md** - Estrutura de dados
+- **ARCHITECTURE.md** - Diagrama de componentes e fluxo
+
+## 🧪 Testar Criptografia Real
+
+1. Abra DevTools (F12)
+2. Vá para Network/Rede
+3. Envie uma mensagem
+4. Procure requisição Socket.IO
+5. Veja que o conteúdo é criptografado (só bytes aleatórios)
